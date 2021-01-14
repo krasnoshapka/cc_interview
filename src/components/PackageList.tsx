@@ -1,18 +1,13 @@
 import React from 'react';
 import {PackageListItem, PackageListItemProps} from "./PackageListItem";
+import {PackageContext} from "../context/packageContext";
 
 function PackageList() {
-  const items: Array<PackageListItemProps> = [
-    {
-      packageId: 1,
-      amount: 10,
-      quantity: 1
-    }
-  ]
+  const { packages, modifyPackage } = React.useContext(PackageContext) as PackageContextType;
 
   return (
     <ul id="package-list">
-      {items && items.map((p) =>
+      {packages && packages.map((p) =>
         <PackageListItem key={p.packageId} {...p} />
       )}
     </ul>

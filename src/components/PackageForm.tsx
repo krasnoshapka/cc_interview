@@ -1,14 +1,14 @@
 import React from 'react';
-import PackageModel from "../utils/PackageModel";
-
-type formType = 'add' | 'modify';
+import {PackageContext} from '../context/packageContext'
 
 export interface PackageFormProps extends React.ComponentPropsWithoutRef<"form"> {
-  formType: formType;
-  packageModel?: PackageModel | null;
+  formType: 'add' | 'modify';
+  p?: IPackage;
 }
 
-const PackageForm: React.FC<PackageFormProps> = ({formType, packageModel = null, ...props}: PackageFormProps) => {
+const PackageForm: React.FC<PackageFormProps> = ({formType, p, ...props}: PackageFormProps) => {
+  const {addPackage, modifyPackage} = React.useContext(PackageContext) as PackageContextType;
+
   return (
     <form >
       Package form
