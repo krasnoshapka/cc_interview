@@ -1,6 +1,6 @@
 import React from 'react';
 import {PackageContext} from '../context/packageContext';
-import {addPackageToCart} from "../utils/api";
+import {useAddPackageToCartMutation} from '../utils/api';
 
 export interface PackageFormProps extends React.ComponentPropsWithoutRef<"form"> {
   formType: 'add' | 'modify';
@@ -16,6 +16,7 @@ const defaultPackage = {
 const PackageForm: React.FC<PackageFormProps> = ({formType, p = defaultPackage, ...props}: PackageFormProps) => {
   const {packages, addPackage, modifyPackage} = React.useContext(PackageContext) as PackageContextType;
   const [formData, setFormData] = React.useState<IPackage>(p);
+  const {addPackageToCart} = useAddPackageToCartMutation();
 
   const handleForm = (e: React.FormEvent<HTMLInputElement>): void => {
     setFormData({
@@ -24,16 +25,15 @@ const PackageForm: React.FC<PackageFormProps> = ({formType, p = defaultPackage, 
     });
   };
 
-  const handleSavePackage = async (e: React.FormEvent, formData: IPackage | any) => {
+  const handleSavePackage = (e: React.FormEvent, formData: IPackage | any) => {
     e.preventDefault();
     // TODO: implement better form data validation here
 
     if (formType === 'add') {
-      // TODO: send add request here
-      const packageId = await addPackageToCart(formData);
-
-      addPackage(formData);
-      setFormData(defaultPackage);
+      addPackageToCart(formData).then((id) => {
+        addPackage(formData);
+        setFormData(defaultPackage);
+      });
     } else {
       // TODO: send modify request here
 
