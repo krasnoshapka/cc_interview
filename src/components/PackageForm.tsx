@@ -1,5 +1,6 @@
 import React from 'react';
-import {PackageContext} from '../context/packageContext'
+import {PackageContext} from '../context/packageContext';
+import {addPackageToCart} from "../utils/api";
 
 export interface PackageFormProps extends React.ComponentPropsWithoutRef<"form"> {
   formType: 'add' | 'modify';
@@ -9,7 +10,7 @@ export interface PackageFormProps extends React.ComponentPropsWithoutRef<"form">
 const defaultPackage = {
   packageId: 0,
   quantity: 1,
-  amount: 5.00
+  amount: 5
 };
 
 const PackageForm: React.FC<PackageFormProps> = ({formType, p = defaultPackage, ...props}: PackageFormProps) => {
@@ -23,12 +24,13 @@ const PackageForm: React.FC<PackageFormProps> = ({formType, p = defaultPackage, 
     });
   };
 
-  const handleSavePackage = (e: React.FormEvent, formData: IPackage | any) => {
+  const handleSavePackage = async (e: React.FormEvent, formData: IPackage | any) => {
     e.preventDefault();
     // TODO: implement better form data validation here
 
-    if (formType == 'add') {
+    if (formType === 'add') {
       // TODO: send add request here
+      const packageId = await addPackageToCart(formData);
 
       addPackage(formData);
       setFormData(defaultPackage);
@@ -41,17 +43,17 @@ const PackageForm: React.FC<PackageFormProps> = ({formType, p = defaultPackage, 
 
   return (
     <form onSubmit={(e) => handleSavePackage(e, formData)}>
-      <h3>Package {formType == 'add' ? packages.length + 1 : formData.packageId + 1}</h3>
+      <h3>Package {formType === 'add' ? packages.length + 1 : formData.packageId + 1}</h3>
       <div>
         <label htmlFor='quantity'>Quantity</label>
-        <input id="quantity" type="number" min="1" max="99" value={formData.quantity} onChange={handleForm} />
+        <input id="quantity" type="number" min="1" max="10" value={formData.quantity} onChange={handleForm} />
       </div>
       <div>
-        <label htmlFor='amount'>Quantity</label>
+        <label htmlFor='amount'>Amount</label>
         <input id="amount" type="number" min="5" max="150" value={formData.amount} onChange={handleForm} />
       </div>
       <button>
-        {formType == 'add' ? 'Add' : 'Save'} Package
+        {formType === 'add' ? 'Add' : 'Save'} Package
       </button>
     </form>
   );
