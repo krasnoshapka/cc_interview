@@ -1,16 +1,16 @@
 import React from 'react';
-import {PackageListItem, PackageListItemProps} from "./PackageListItem";
+import {PackageListItem} from "./PackageListItem";
 import {PackageContext} from "../context/packageContext";
 
 function PackageList() {
   const { packages, modifyPackage } = React.useContext(PackageContext) as PackageContextType;
 
   return (
-    <ul id="package-list">
+    <div id="package-list">
       {packages && packages.map((p) =>
-        <PackageListItem key={p.packageId} {...p} />
+        <PackageListItem key={p.packageId} p={p} />
       )}
-    </ul>
+    </div>
   );
 }
 

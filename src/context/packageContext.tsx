@@ -3,20 +3,17 @@ import React from "react";
 export const PackageContext = React.createContext<PackageContextType | null>(null);
 
 const PackageProvider: React.FC<React.ReactNode> = ({ children}) => {
-  const [packages, setPackages] = React.useState<IPackage[]>([
-    {
-      packageId: 1,
-      amount: 10,
-      quantity: 1
-    }
-  ]);
+  const [packages, setPackages] = React.useState<IPackage[]>([]);
 
   const addPackage = (p: IPackage) => {
+    p.packageId = packages.length;
     setPackages([...packages, p]);
   };
 
   const modifyPackage = (p: IPackage) => {
-    setPackages([...packages, p]);
+    const newPackages = [...packages];
+    newPackages[p.packageId] = p;
+    setPackages(newPackages);
   };
 
   return (
