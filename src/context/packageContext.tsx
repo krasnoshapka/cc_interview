@@ -16,8 +16,12 @@ const PackageProvider: React.FC<React.ReactNode> = ({ children}) => {
     setPackages(newPackages);
   };
 
+  const loadPackages = (packages: IPackage[]) => {
+    setPackages(packages);
+  };
+
   return (
-    <PackageContext.Provider value={{ packages, addPackage, modifyPackage }}>
+    <PackageContext.Provider value={{ packages, addPackage, modifyPackage, loadPackages }}>
       {children}
     </PackageContext.Provider>
   );
