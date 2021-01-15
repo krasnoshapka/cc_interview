@@ -9,7 +9,7 @@ function PackageOrder() {
   return (
     <ApolloProvider client={Client}>
       <PackageProvider>
-        <div id="package-order">
+        <div className="package-order">
           <PackageList />
           <PackageForm formType="add" />
         </div>

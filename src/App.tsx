@@ -5,7 +5,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        Giftcard order
+        <h1>Giftcard order</h1>
       </header>
       <PackageOrder />
     </div>

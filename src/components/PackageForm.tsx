@@ -42,20 +42,24 @@ const PackageForm: React.FC<PackageFormProps> = ({formType, p = defaultPackage, 
   }
 
   return (
-    <form onSubmit={(e) => handleSavePackage(e, formData)}>
-      <h3>Package {formType === 'add' ? packages.length + 1 : formData.packageId + 1}</h3>
-      <div>
-        <label htmlFor='quantity'>Quantity</label>
-        <input id="quantity" type="number" min="1" max="10" value={formData.quantity} onChange={handleForm} />
-      </div>
-      <div>
-        <label htmlFor='amount'>Amount</label>
-        <input id="amount" type="number" min="5" max="150" value={formData.amount} onChange={handleForm} />
-      </div>
-      <button>
-        {formType === 'add' ? 'Add' : 'Save'} Package
-      </button>
-    </form>
+    <React.Fragment>
+      {formType === 'add' && (<h2>Package {packages.length + 1}</h2>)}
+      <form onSubmit={(e) => handleSavePackage(e, formData)} className="package-form">
+        <div>
+          <label htmlFor='quantity'>Quantity:</label>
+          <input id="quantity" type="number" min="1" max="10" value={formData.quantity} onChange={handleForm} />
+        </div>
+        <div>
+          <label htmlFor='amount'>Amount:</label>
+          <input id="amount" type="number" min="5" max="150" value={formData.amount} onChange={handleForm} />
+        </div>
+        <div>
+          <button>
+            {formType === 'add' ? 'Add' : 'Save'} Package
+          </button>
+        </div>
+      </form>
+    </React.Fragment>
   );
 }
 
