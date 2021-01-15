@@ -1,6 +1,6 @@
 import React from 'react';
 import {PackageContext} from '../context/packageContext';
-import {useAddPackageToCartMutation} from '../utils/api';
+import {useAddPackageToCartMutation, useUpdatePackageInCartMutation} from '../utils/api';
 
 export interface PackageFormProps extends React.ComponentPropsWithoutRef<"form"> {
   formType: 'add' | 'modify';
@@ -14,9 +14,10 @@ const defaultPackage = {
 };
 
 const PackageForm: React.FC<PackageFormProps> = ({formType, p = defaultPackage, ...props}: PackageFormProps) => {
-  const {packages, addPackage, modifyPackage} = React.useContext(PackageContext) as PackageContextType;
+  const {packages, loadPackages, modifyPackage} = React.useContext(PackageContext) as PackageContextType;
   const [formData, setFormData] = React.useState<IPackage>(p);
   const {addPackageToCart} = useAddPackageToCartMutation();
+  const {updatePackageInCart} = useUpdatePackageInCartMutation();
 
   const handleForm = (e: React.FormEvent<HTMLInputElement>): void => {
     setFormData({
@@ -30,14 +31,14 @@ const PackageForm: React.FC<PackageFormProps> = ({formType, p = defaultPackage, 
     // TODO: implement better form data validation here
 
     if (formType === 'add') {
-      addPackageToCart(formData).then((id) => {
-        addPackage(formData);
+      addPackageToCart(formData).then((packages) => {
+        loadPackages(packages);
         setFormData(defaultPackage);
       });
     } else {
-      // TODO: send modify request here
-
-      modifyPackage(formData);
+      updatePackageInCart(formData).then((id) => {
+        modifyPackage(formData);
+      });
     }
   }
 
@@ -51,7 +52,7 @@ const PackageForm: React.FC<PackageFormProps> = ({formType, p = defaultPackage, 
         </div>
         <div>
           <label htmlFor='amount'>Amount:</label>
-          <input id="amount" type="number" min="5" max="150" value={formData.amount} onChange={handleForm} />
+          <input id="amount" type="number" min="5" max="150" value={Math.round(formData.amount)} onChange={handleForm} />
         </div>
         <div>
           <button>

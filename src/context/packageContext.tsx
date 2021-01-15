@@ -5,14 +5,10 @@ export const PackageContext = React.createContext<PackageContextType | null>(nul
 const PackageProvider: React.FC<React.ReactNode> = ({ children}) => {
   const [packages, setPackages] = React.useState<IPackage[]>([]);
 
-  const addPackage = (p: IPackage) => {
-    p.packageId = packages.length;
-    setPackages([...packages, p]);
-  };
-
   const modifyPackage = (p: IPackage) => {
     const newPackages = [...packages];
-    newPackages[p.packageId] = p;
+    const index: number = newPackages.findIndex((item) => item.packageId === p.packageId );
+    newPackages[index] = p;
     setPackages(newPackages);
   };
 
@@ -21,7 +17,7 @@ const PackageProvider: React.FC<React.ReactNode> = ({ children}) => {
   };
 
   return (
-    <PackageContext.Provider value={{ packages, addPackage, modifyPackage, loadPackages }}>
+    <PackageContext.Provider value={{ packages, modifyPackage, loadPackages }}>
       {children}
     </PackageContext.Provider>
   );

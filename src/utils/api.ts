@@ -19,10 +19,13 @@ export default client;
 
 export function useAddPackageToCartMutation() {
   const [addPackageToCart, {data, loading, error}] = useMutation(gql`
-    mutation addPackageToCart($sku:SKU!, $quantity: Int!, $personalMessage: Boolean!) {
-      addPackageToCart(sku: $sku, quantity: $quantity, personalMessage: $personalMessage) {
-        id,
-        quantity
+    mutation addPackageToCart($sku:SKU!, $quantity: Int!) {
+      addPackageToCart(sku: $sku, quantity: $quantity, personalMessage: false) {
+        items {
+          id,
+          quantity,
+          price
+        }
       }
     }
   `);
@@ -31,15 +34,21 @@ export function useAddPackageToCartMutation() {
     try {
       const {
         data: {
-          addPackageToCart: { id }
+          addPackageToCart: { items }
         }
       } = await addPackageToCart({variables: {
         sku: convertToSKU(p.amount),
-        quantity: p.quantity,
-        personalMessage: false
+        quantity: p.quantity
       }});
 
-      return id;
+      return items.map((item: any): IPackage => {
+        // TODO: implement better type validation here
+        return {
+          packageId: item.id,
+          amount: item.price,
+          quantity: item.quantity
+        }
+      });
     } catch (error) {
       console.log(error.graphQLErrors);
     }
@@ -67,7 +76,7 @@ export function useCartQuery() {
     }
   `, {
     onCompleted: (data) => {
-      loadPackages(data.cart.items.map((item: any) => {
+      loadPackages(data.cart.items.map((item: any): IPackage => {
         // TODO: implement better type validation here
         return {
           packageId: item.id,
@@ -80,3 +89,33 @@ export function useCartQuery() {
 
   return {data, loading, error };
 }
+
+export function useUpdatePackageInCartMutation() {
+  const [updatePackageInCart, {data, loading, error}] = useMutation(gql`
+    mutation updatePackageInCart($id:ID!, $quantity: Int!) {
+      updatePackageInCart(cartItemId: $id, personalMessage:false, quantity: $quantity) {
+        id
+      }
+    }
+  `);
+
+  const handleUpdatePackageInCart = async (p: IPackage) => {
+    try {
+      const {
+        data: {
+          updatePackageInCart: { id }
+        }
+      } = await updatePackageInCart({variables: {
+        id: p.packageId,
+        quantity: p.quantity
+      }});
+
+      return id;
+    } catch (error) {
+      console.log(error.graphQLErrors);
+    }
+  };
+
+  return {updatePackageInCart: handleUpdatePackageInCart, data, loading, error };
+}
+
