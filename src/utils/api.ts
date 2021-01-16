@@ -17,6 +17,17 @@ const client = new ApolloClient({
 });
 export default client;
 
+function convertItemsToPackages(items: []): IPackage[] {
+  // TODO: implement better type validation here
+  return items.map((item: any): IPackage => {
+    return {
+      packageId: parseInt(item.id),
+      quantity: parseInt(item.quantity),
+      amount: parseFloat(item.price)
+    }
+  });
+}
+
 export function useAddPackageToCartMutation() {
   const [addPackageToCart, {data, loading, error}] = useMutation(gql`
     mutation addPackageToCart($sku:SKU!, $quantity: Int!) {
@@ -41,17 +52,11 @@ export function useAddPackageToCartMutation() {
         quantity: p.quantity
       }});
 
-      return items.map((item: any): IPackage => {
-        // TODO: implement better type validation here
-        return {
-          packageId: item.id,
-          amount: item.price,
-          quantity: item.quantity
-        }
-      });
+      return convertItemsToPackages(items);
     } catch (error) {
       console.log(error.graphQLErrors);
     }
+    return [];
   };
 
   return {addPackageToCart: handleAddPackageToCart, data, loading, error };
@@ -76,14 +81,7 @@ export function useCartQuery() {
     }
   `, {
     onCompleted: (data) => {
-      loadPackages(data.cart.items.map((item: any): IPackage => {
-        // TODO: implement better type validation here
-        return {
-          packageId: item.id,
-          quantity: item.quantity,
-          amount: item.price
-        }
-      }));
+      loadPackages(convertItemsToPackages(data.cart.items));
     }
   });
 
@@ -93,8 +91,12 @@ export function useCartQuery() {
 export function useUpdatePackageInCartMutation() {
   const [updatePackageInCart, {data, loading, error}] = useMutation(gql`
     mutation updatePackageInCart($id:ID!, $quantity: Int!) {
-      updatePackageInCart(cartItemId: $id, personalMessage:false, quantity: $quantity) {
-        id
+      updatePackageInCart(cartItemId: $id, quantity: $quantity, personalMessage: false) {
+        items {
+          id,
+          quantity,
+          price
+        }
       }
     }
   `);
@@ -103,17 +105,18 @@ export function useUpdatePackageInCartMutation() {
     try {
       const {
         data: {
-          updatePackageInCart: { id }
+          updatePackageInCart: { items }
         }
       } = await updatePackageInCart({variables: {
-        id: p.packageId,
+        id: `${p.packageId}`,
         quantity: p.quantity
       }});
 
-      return id;
+      return convertItemsToPackages(items);
     } catch (error) {
       console.log(error.graphQLErrors);
     }
+    return [];
   };
 
   return {updatePackageInCart: handleUpdatePackageInCart, data, loading, error };

@@ -14,8 +14,8 @@ const defaultPackage = {
 };
 
 const PackageForm: React.FC<PackageFormProps> = ({formType, p = defaultPackage, ...props}: PackageFormProps) => {
-  const {packages, loadPackages, modifyPackage} = React.useContext(PackageContext) as PackageContextType;
-  const [formData, setFormData] = React.useState<IPackage>(p);
+  const {packages, loadPackages} = React.useContext(PackageContext) as PackageContextType;
+  const [formData, setFormData] = React.useState(p);
   const {addPackageToCart} = useAddPackageToCartMutation();
   const {updatePackageInCart} = useUpdatePackageInCartMutation();
 
@@ -29,15 +29,20 @@ const PackageForm: React.FC<PackageFormProps> = ({formType, p = defaultPackage, 
   const handleSavePackage = (e: React.FormEvent, formData: IPackage | any) => {
     e.preventDefault();
     // TODO: implement better form data validation here
+    const newP: IPackage = {
+      packageId: formData.packageId,
+      amount: parseInt(formData.amount),
+      quantity: parseInt(formData.quantity)
+    }
 
     if (formType === 'add') {
-      addPackageToCart(formData).then((packages) => {
+      addPackageToCart(newP).then((packages) => {
         loadPackages(packages);
         setFormData(defaultPackage);
       });
     } else {
-      updatePackageInCart(formData).then((id) => {
-        modifyPackage(formData);
+      updatePackageInCart(newP).then((packages) => {
+        loadPackages(packages);
       });
     }
   }
@@ -51,7 +56,7 @@ const PackageForm: React.FC<PackageFormProps> = ({formType, p = defaultPackage, 
           <input id="quantity" type="number" min="1" max="10" value={formData.quantity} onChange={handleForm} />
         </div>
         <div>
-          <label htmlFor='amount'>Amount:</label>
+          <label htmlFor='amount'>Amount (€):</label>
           <input id="amount" type="number" min="5" max="150" value={Math.round(formData.amount)} onChange={handleForm} />
         </div>
         <div>

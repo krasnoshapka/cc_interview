@@ -6,6 +6,5 @@ interface IPackage {
 
 type PackageContextType = {
   packages: IPackage[],
-  modifyPackage: (p: IPackage) => void
   loadPackages: (p: IPackage[]) => void
 };

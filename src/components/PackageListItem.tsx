@@ -12,7 +12,7 @@ export const PackageListItem: React.FC<PackageListItemProps> = ({p, index, ...pr
       <div className='package-details'>
         <div className="package-title">Package {index + 1}</div>
         <div className="package-quantity">Quantity: {p.quantity}</div>
-        <div className="package-amount">Amount: {p.amount}</div>
+        <div className="package-amount">Amount: € {p.amount}</div>
       </div>
       <div className="package-modify">
         <b>Modify</b>
