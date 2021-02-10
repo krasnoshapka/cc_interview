@@ -1,0 +1,154 @@
+// VARIABLES
+$color-back: rgb(0, 23, 75);
+$color-back-secondary: rgb(1, 22, 61);
+$color-primary: rgb(255, 255, 255);
+$color-secondary: rgb(255, 120, 113);
+
+// BASIC RESET
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-family: "Lato", sans-serif;
+  font-weight: 400;
+  line-height: 1.7;
+  padding: 2rem;
+  box-sizing: border-box;
+  background-color: $color-back;
+  color: $color-primary;
+}
+
+// APP BASIC
+.app {
+}
+
+.header {
+  text-align: center;
+
+  h1 {
+    display: inline-block;
+    font-size: 2rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    letter-spacing: .2rem;
+  }
+}
+
+// LAYOUT
+.row {
+  margin: 0 auto;
+  max-width: 114rem;
+
+  .column {
+    float: left;
+    width: 30%;
+    padding: 1rem .5rem;
+  }
+
+  .column:not(:last-child) {
+    margin-right: 5%;
+  }
+}
+
+// COMPONENTS
+.loading {
+  position: fixed;
+  top: 2rem;
+  left: 2rem;
+  padding: .5rem;
+  color: $color-secondary;
+  background-color: $color-primary;
+  border-radius: 3px;
+}
+
+.package-order {
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    letter-spacing: .2rem;
+    text-align: center;
+  }
+}
+
+.package-form {
+  display: inline-block;
+  width: 100%;
+  font-size: 1.2rem;
+  background-color: $color-primary;
+  color: $color-secondary;
+  border-radius: 3px;
+
+  label {
+    padding-right: 20px;
+  }
+
+  button {
+    float: right;
+    text-transform: uppercase;
+  }
+}
+
+.package-list-item {
+  display: inline-block;
+  width: 100%;
+  margin: 1rem 0;
+  font-size: 1.2rem;
+  border-radius: 3px;
+  background-color: $color-back-secondary;
+  padding: 0 .5rem;
+
+  &__title {
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: .2rem;
+  }
+
+  &__modify {
+    position: relative;
+    padding-bottom: .5rem;
+
+    .package-form {
+      position: absolute;
+      top: calc(100% - .5rem);
+      left: 0;
+      opacity: 0;
+      z-index: 1;
+      transition: all 1s ease-out;
+      border-radius: 0;
+      border: 1px $color-back-secondary solid;
+    }
+  }
+
+
+  &__input {
+    display: none;
+  }
+
+  &__input:checked ~ .package-form  {
+    opacity: 1;
+  }
+
+  &__label {
+    display: inline-block;
+    width: 8rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: .2rem;
+    text-align: center;
+    background-color: $color-primary;
+    color: $color-back;
+    cursor: pointer;
+  }
+}

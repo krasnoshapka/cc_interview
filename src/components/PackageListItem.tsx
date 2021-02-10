@@ -9,13 +9,14 @@ export interface PackageListItemProps extends React.ComponentPropsWithoutRef<"di
 export const PackageListItem: React.FC<PackageListItemProps> = ({p, index, ...props}: PackageListItemProps) => {
   return (
     <div className='package-list-item'>
-      <div className='package-details'>
-        <div className="package-title">Package {index + 1}</div>
-        <div className="package-quantity">Quantity: {p.quantity}</div>
-        <div className="package-amount">Amount: € {p.amount}</div>
+      <div className='package-list-item__details row'>
+        <div className="package-list-item__title column">Package {index + 1}</div>
+        <div className="package-list-item__quantity column">Quantity: {p.quantity}</div>
+        <div className="package-list-item__amount column">Amount: € {p.amount}</div>
       </div>
-      <div className="package-modify">
-        <b>Modify</b>
+      <div className="package-list-item__modify row">
+        <input type="checkbox" className="package-list-item__input" id={`modify-${index}`} />
+        <label htmlFor={`modify-${index}`} className="package-list-item__label">Modify</label>
         <PackageForm formType="modify" p={p} />
       </div>
     </div>
